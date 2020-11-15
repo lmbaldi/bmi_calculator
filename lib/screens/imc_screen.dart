@@ -1,3 +1,6 @@
+import 'package:bmi_calculator/components/text_field_imc.dart';
+import 'package:bmi_calculator/components/text_imc.dart';
+import 'package:bmi_calculator/components/text_result_imc.dart';
 import 'package:flutter/material.dart';
 
 class ImcScreen extends StatefulWidget {
@@ -35,52 +38,14 @@ class _ImcScreenState extends State<ImcScreen> {
               children: [
 
                 SizedBox(height: 20.0),
-                Text(
-                  "Sua altura em metros: ",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
+                TextImc("Sua altura em metros: "),
                 SizedBox(height: 8.0),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  controller: heightController,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: "Sua altura em metros",
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
+                TextFieldImc(heightController, "Sua altura em metros"),
                 SizedBox(height: 20.0),
-                Text(
-                  "Seu peso em quilos: ",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
+                TextImc("Seu peso em quilos: "),
                 SizedBox(height: 8.0),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  controller: weightController,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: "Seu peso em quilos",
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
+                TextFieldImc(weightController, "Seu peso em quilos"),
+                SizedBox(height: 20.0),
                 Container(
                   width: double.infinity,
                   height: 50.0,
@@ -100,41 +65,11 @@ class _ImcScreenState extends State<ImcScreen> {
                   ),
                 ),
                 SizedBox(height: 50.0),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    "Seu índice de massa corporal é: ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                TextResultImc("Seu índice de massa corporal é: ", 24.0),
                 SizedBox(height: 30.0),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    "$resultImc",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                TextResultImc(resultImc, 30.0),
                 SizedBox(height: 30.0),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    "$situacaoImc",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                TextResultImc(situacaoImc, 40.0),
               ],
             ),
           ),
@@ -149,19 +84,22 @@ class _ImcScreenState extends State<ImcScreen> {
     setState(() {
       resultImc = imc;
       situacaoImc = situation(finalResult);
+      heightController.clear();
+      weightController.clear();
     });
+    FocusScope.of(context).requestFocus(new FocusNode());
   }
 
   String situation(double value) {
     if (value < 18.5) {
       return "Abaixo do peso";
-    } else if (value > 18.5 || value <= 24.9) {
+    } else if (value > 18.5 && value <= 24.9) {
       return "Peso normal";
-    } else if (value > 25 || value <= 29.9) {
+    } else if (value > 25 && value <= 29.9) {
       return "Sobrepeso";
-    } else if (value > 30 || value <= 34.9) {
+    } else if (value > 30 && value <= 34.9) {
       return "Obesidade grau 1";
-    } else if (value > 35 || value <= 39.9) {
+    } else if (value > 35 && value <= 39.9) {
       return "Obesidade grau 2";
     } else if (value > 40) {
       return "Obesidade grau 3";
