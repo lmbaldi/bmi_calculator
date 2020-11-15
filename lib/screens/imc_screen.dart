@@ -36,7 +36,6 @@ class _ImcScreenState extends State<ImcScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 SizedBox(height: 20.0),
                 TextImc("Sua altura em metros: "),
                 SizedBox(height: 8.0),
@@ -51,12 +50,7 @@ class _ImcScreenState extends State<ImcScreen> {
                   height: 50.0,
                   child: FlatButton(
                     color: Colors.blue,
-                    child: Text(
-                      "Calcular",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: TextImc("Calcular", color: Colors.white),
                     onPressed: () {
                       double height = double.parse(heightController.value.text);
                       double weight = double.parse(weightController.value.text);
@@ -84,9 +78,11 @@ class _ImcScreenState extends State<ImcScreen> {
     setState(() {
       resultImc = imc;
       situacaoImc = situation(finalResult);
+      //clean TextEditingController
       heightController.clear();
       weightController.clear();
     });
+    //close keyboard
     FocusScope.of(context).requestFocus(new FocusNode());
   }
 
