@@ -1,7 +1,12 @@
-import 'package:bmi_calculator/components/text_field_imc.dart';
-import 'package:bmi_calculator/components/text_imc.dart';
-import 'package:bmi_calculator/components/text_result_imc.dart';
+import 'dart:io';
+import 'package:bmi_calculator/components/widget/button_calc.dart';
+import 'package:bmi_calculator/components/widget/button_clean.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:bmi_calculator/components/widget/text_imc.dart';
+import 'package:bmi_calculator/components/widget/text_result_imc.dart';
+import 'package:bmi_calculator/components/adaptative_widget/adaptative_text_field.dart';
 
 class ImcScreen extends StatefulWidget {
   @override
@@ -9,67 +14,83 @@ class ImcScreen extends StatefulWidget {
 }
 
 class _ImcScreenState extends State<ImcScreen> {
-
   String resultImc = "";
   String situacaoImc = "";
+  bool showButton = false;
 
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            " Calcular IMC",
-            style: TextStyle(color: Colors.black),
-          ),
-          elevation: 0.0,
-          backgroundColor: Color(0xfffafafa),
-
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20.0),
-                TextImc("Sua altura em metros: "),
-                SizedBox(height: 8.0),
-                TextFieldImc(heightController, "Sua altura em metros"),
-                SizedBox(height: 20.0),
-                TextImc("Seu peso em quilos: "),
-                SizedBox(height: 8.0),
-                TextFieldImc(weightController, "Seu peso em quilos"),
-                SizedBox(height: 20.0),
-                Container(
-                  width: double.infinity,
-                  height: 50.0,
-                  child: FlatButton(
-                    color: Colors.blue,
-                    child: TextImc("Calcular", color: Colors.white),
-                    onPressed: () {
-                      double height = double.parse(heightController.value.text);
-                      double weight = double.parse(weightController.value.text);
-                      calcularImc(weight, height);
-                    },
-                  ),
-                ),
-                SizedBox(height: 50.0),
-                TextResultImc("Seu índice de massa corporal é: ", 24.0),
-                SizedBox(height: 30.0),
-                TextResultImc(resultImc, 30.0),
-                SizedBox(height: 30.0),
-                TextResultImc(situacaoImc, 40.0),
-              ],
-            ),
+    final platformBody = SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20.0),
+              TextImc("Sua altura em metros: "),
+              SizedBox(height: 8.0),
+              AdaptiveTextField(controller: heightController, hint: "Sua altura em metros"),
+              SizedBox(height: 20.0),
+              TextImc("Seu peso em quilos: "),
+              SizedBox(height: 8.0),
+              AdaptiveTextField(controller: weightController, hint: "Seu peso em quilos"),
+              SizedBox(height: 20.0),
+              ButtonCalc(label: "Calcular", onPressed: _onPressed),
+              SizedBox(height: 50.0),
+              showButton
+                  ? TextResultImc("Seu índice de massa corporal é: ", 24.0)
+                  : Container(),
+              SizedBox(height: 30.0),
+              TextResultImc(resultImc, 30.0),
+              SizedBox(height: 30.0),
+              TextResultImc(situacaoImc, 40.0),
+              SizedBox(height: 20.0),
+              showButton
+                  ? ButtonClean(label: "Limpar", onPressed: _clean)
+                  : Container(),
+            ],
           ),
         ),
       ),
     );
+
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text("Calcular IMC"),
+          )
+        : AppBar(
+            title: Text(
+              "Calcular IMC",
+              style: TextStyle(color: Colors.black),
+            ),
+            elevation: 0.0,
+            backgroundColor: Color(0xfffafafa),
+          );
+
+    return Container(
+      child: Platform.isIOS
+          ? CupertinoPageScaffold(child: platformBody)
+          : Scaffold(appBar: appBar, body: platformBody),
+    );
+  }
+
+  _onPressed() {
+    double height = double.parse(heightController.value.text);
+    double weight = double.parse(weightController.value.text);
+    calcularImc(weight, height);
+  }
+
+  _clean(){
+    setState(() {
+      resultImc = "";
+      situacaoImc = "";
+      showButton = false;
+    });
   }
 
   String calcularImc(double weight, double height) {
@@ -78,10 +99,11 @@ class _ImcScreenState extends State<ImcScreen> {
     setState(() {
       resultImc = imc;
       situacaoImc = situation(finalResult);
-      //clean TextEditingController
-      heightController.clear();
-      weightController.clear();
+      showButton = true;
     });
+    //clear TextEditingController
+    heightController.clear();
+    weightController.clear();
     //close keyboard
     FocusScope.of(context).requestFocus(new FocusNode());
   }
@@ -101,5 +123,4 @@ class _ImcScreenState extends State<ImcScreen> {
       return "Obesidade grau 3";
     }
   }
-
 }
