@@ -16,6 +16,7 @@ class ImcScreen extends StatefulWidget {
 class _ImcScreenState extends State<ImcScreen> {
   String resultImc = "";
   String situacaoImc = "";
+  bool showText = false;
   bool showButton = false;
 
   TextEditingController heightController = TextEditingController();
@@ -42,7 +43,7 @@ class _ImcScreenState extends State<ImcScreen> {
               SizedBox(height: 20.0),
               ButtonCalc(label: "Calcular", onPressed: _onPressed),
               SizedBox(height: 50.0),
-              showButton
+              showText
                   ? TextResultImc("Seu índice de massa corporal é: ", 24.0)
                   : Container(),
               SizedBox(height: 30.0),
@@ -90,6 +91,7 @@ class _ImcScreenState extends State<ImcScreen> {
       resultImc = "";
       situacaoImc = "";
       showButton = false;
+      showText = false;
     });
   }
 
@@ -100,6 +102,7 @@ class _ImcScreenState extends State<ImcScreen> {
       resultImc = imc;
       situacaoImc = situation(finalResult);
       showButton = true;
+      showText = true;
     });
     //clear TextEditingController
     heightController.clear();
