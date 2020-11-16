@@ -15,5 +15,7 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-This sample project is based on an example from the YouTube channel Doctor Code (BMI Calculator using Flutter - https://www.youtube.com/watch?v=txmYhAvTWV0
-) for study purposes 
+The first branch(master) use a sample project is based on an example from the YouTube channel Doctor Code (BMI Calculator using Flutter - https://www.youtube.com/watch?v=txmYhAvTWV0
+) for study purposes.
+The second branch(refactoring) the project was divided into new folders for division of responsabilities, so that the code can be better
+reused, avoiding complications, facilitating the creation and execution of tests if necessary.
